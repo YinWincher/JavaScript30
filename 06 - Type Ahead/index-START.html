@@ -16,6 +16,43 @@
   </form>
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+//单查找第一个 通过同步的方法
+const ul = document.querySelector('.suggestions');
+const input = document.querySelector('.search');
+input.addEventListener('change', function(){
+  ul.innerHTML = '';
+  var xml = new XMLHttpRequest();
+    xml.open('get', endpoint, true);
+    xml.responseType = 'json';
+    xml.send();
+
+    xml.onreadystatechange = function(){
+      if (xml.status == 200 && xml.readyState == 4) {
+        var a = Array.from(xml.response);
+        for(let i = 0;i<a.length;i++){
+          if (a[i].city.includes(input.value)) {
+              show(a[i]);
+          }
+        }
+      }
+    };
+  
+});
+
+function show(json){
+    var li = document.createElement('li');
+    li.innerHTML = `<span class='name'>${json.city}</span><span class='population'>${json.population}</span>`;
+    ul.append(li);
+}
+
+
+
+
+
+
+
+
+
 
 </script>
   </body>

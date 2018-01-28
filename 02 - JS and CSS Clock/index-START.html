@@ -62,13 +62,29 @@
       background:black;
       position: absolute;
       top:50%;
+      transform-origin: 100%;
     }
 
   </style>
 
-  <script>
+    <script>
+        window.onload = function(){
+            setInterval(setClock,1000);
+            
+            function setClock(){
+                var date = new Date();
+                const hour = document.querySelector('.hour-hand');
+                
+                hour.style.transform = `rotate(${date.getHours()%12*30+90}deg)`;
+                const minute = document.querySelector('.min-hand');
+                const second = document.querySelector('.second-hand');
+                
+                minute.style.transform = `rotate(${date.getMinutes()*6+90}deg)`;
+                second.style.transform = `rotate(${date.getSeconds()*6+90}deg)`;
+            }
+        }
 
 
-  </script>
+    </script>
 </body>
 </html>

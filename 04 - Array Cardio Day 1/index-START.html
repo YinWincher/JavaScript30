@@ -6,6 +6,11 @@
 </head>
 <body>
   <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <div class="outer">
+    <ul class="list">
+
+    </ul>
+  </div>
   <script>
     // Get your shorts on - this is an array workout!
     // ## Array Cardio Day 1
@@ -31,29 +36,74 @@
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
-
+    var q1 = inventors.filter((value,index,array)=>{
+      return value.year>=1500  && value.year<1600;  
+    });
+    console.log(q1);
     // Array.prototype.map()
     // 2. Give us an array of the inventors' first and last names
-
+    var q2 = inventors.map((value,index,array)=>{
+      return value.first+' '+value.last;
+    });
+    console.log(q2);
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
-
+    inventors.sort(function(a,b){
+        return a.year - b.year;
+    });
+    console.table(inventors);
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live?
-
+    var q4 = inventors.reduce((pre,cur,index,array)=> (pre+(cur.passed-cur.year)),0);
+    console.log(q4);
     // 5. Sort the inventors by years lived
+    inventors.sort(function(pre,cur){
+      return (pre.passed-pre.year)-(cur.passed-cur.year);
+
+    });
+    console.table(inventors);
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
-
+    const q6 = people.filter((value,index)=>(value.includes('de')));
+    console.log(q6);
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
+    people.sort((pre,cur)=>{
+      var a = pre.slice(pre.search(/\w+$/m)).toUpperCase();
+      var b = cur.slice(cur.search(/\w+$/m)).toUpperCase();
+      
+      return a.localeCompare(b);
+    });
+    console.log(people);
+    
+    const list = document.querySelector('ul.list');
 
+    for (var i = 0; i < people.length; i++) {
+      let first =  people[i].substr(people[i].search(/\w+$/m),1).toUpperCase();
+      var ul = list.querySelector(`ul[data-zimu*=${first}]`);
+      if (!ul) {
+        var liNode = document.createElement('li');
+        liNode.innerHTML = `<ul data-zimu='${first}'>${first}<ul>`;
+        list.appendChild(liNode);
+        ul = liNode.querySelector(`ul[data-zimu='${first}']`);
+      }
+      let li = document.createElement('li');
+      li.textContent = people[i];
+      ul.append(li);
+    }
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
-
+    var ccc = data.reduce((pre,cur,index,array)=>{
+      if (!pre[cur]) {
+        pre[cur] = 0;
+      }
+      pre[cur]++;
+      return pre;
+    }, {});
+    console.log(ccc);
   </script>
 </body>
 </html>
