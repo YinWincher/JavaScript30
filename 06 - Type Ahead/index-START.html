@@ -15,64 +15,57 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-//单查找第一个 通过同步的方法
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
     const ul = document.querySelector('.suggestions');
     const input = document.querySelector('.search');
-    var arr = null,
+    var arr = [],
         length = null;
-    var xml = new XMLHttpRequest();
-    xml.open('get', endpoint, true);
-    xml.responseType = 'json';
-    xml.send();
+    fetch(endpoint)
+    // .then(res=>res.blob())
+    .then(res=>res.json())
+    .then(data=>arr.push(...data));
+    //使用xmr的方法
+    // var xml = new XMLHttpRequest();
+    // xml.open('get', endpoint, true);
+    // xml.responseType = 'json';
+    // xml.send();
 
-    xml.onreadystatechange = function(){
-        if (xml.status == 200 && xml.readyState == 4) {
-            arr = Array.from(xml.response);
+    // xml.onreadystatechange = function(){
+    //     if (xml.status == 200 && xml.readyState == 4) {
+    //         arr = Array.from(xml.response);
+    //     }
+    // }; 
+input.addEventListener('change', handle);
+input.addEventListener('keyup', handle);
 
-        }
-    }; 
-input.addEventListener('change', function(){
+function handle(){
     ul.innerHTML = '';
     var re = new RegExp(`${this.value}`, 'gi');
-    // console.log(this.value);
     try {
         length = arr.length;
+        for(let i = 0;i<length;i++){
+            if (arr[i].city.search(re) !== -1 || arr[i].state.search(re) !== -1) {
+                show(arr[i]);
+            }
+        }
     } catch(e) {
         // statements
         console.log(e);
     }
-    for(let i = 0;i<length;i++){
-        if (arr[i].city.search(re) !== -1 || arr[i].state.search(re) !== -1) {
-              show(arr[i]);
-        }
-    }
-});
-input.addEventListener('keyup', function(){
-    ul.innerHTML = '';
-    var re = new RegExp(`(?<=-)${this.value}`, 'gi');
-    console.log(re);
-    try {
-        length = arr.length;
-    } catch(e) {
-        // statements
-        console.log(e);
-    }
-    for(let i = 0;i<length;i++){
-        if (arr[i].city.search(re) !== -1 || arr[i].state.search(re) !== -1) {
-              show(arr[i]);
-        }
-    }
-});
-
-
+}
 
 function show(json){
     var li = document.createElement('li');
-    li.innerHTML = `<span class='name'>${json.city}</span><span class='population'>${json.population}</span>`;
+    var re = new RegExp(`${input.value}`, 'gi');
+    var text = input.value;
+    var city = json.city;
+    var population = json.population;
+    var state = json.state;
+    city = city.replace(re, `<span class='hl'>${text}</span>`);
+    state = state.replace(re, `<span class='hl'>${text}</span>`);
+    li.innerHTML = `<span class='name'>${city},${state}</span><span class='population'>${population}</span>`;   
     ul.append(li);
 }
-
 
 
 
