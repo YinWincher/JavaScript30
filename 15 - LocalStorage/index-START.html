@@ -28,7 +28,73 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const list = JSON.parse(localStorage.getItem('list')) || [];
+  const submit = document.querySelector('form input[type*=submit]');
+
+
+  submit.addEventListener('click', handler);
+  show(list,itemsList);
+
+  delegate(itemsList,'input','click',function(){
+  	var json = JSON.parse(localStorage.getItem('list')) || [];
+  	var index = event.target.dataset.index;
+  	json[index].done = !json[index].done;
+  	localStorage.setItem('list', JSON.stringify(json));
+  });
+
+  function handler(){
+  	event.preventDefault();
+  	var value = addItems.item.value;
+  	if (value) {
+  		var item = {
+  			'text' : value,
+  			'done' : false
+  		};
+  		list.push(item);
+  		localStorage.setItem('list', JSON.stringify(list));
+  	}
+  	addItems.reset();
+  	show(list, itemsList);
+
+  }
+
+  //将数据显示
+  function show(json,itemList){
+  	var tem = Array.from(json);
+  	itemsList.innerHTML = tem.map((ele,i) =>
+  		{
+  			return `
+		  		<li>
+		          <input type="checkbox" data-index=${i} id="item${i}" ${ele.done ? 'checked' : ''} />
+		          <label for="item${i}">${ele.text}</label>
+		        </li>
+		        `;
+  		}).join('');
+  }
+
+
+   function isParentOfTarget(selector, target, until=document.documentElement) {
+	    var parent = target;
+	    while(parent != until) {
+	        if(parent.matches(selector)) {
+	            return parent;
+	        }
+	        parent = parent.parentNode;
+	    }
+	    return false;
+	}
+
+   function delegate(element, selector, event, hanlder) {
+	    element.addEventListener(event, function(event) {
+	      var target = event.target;
+	      var res = isParentOfTarget(selector, target, element);
+	      if(!res) {
+	        return;
+	      }
+	      hanlder.call(res, event);
+	    }, false);
+	}
+
 
 </script>
 

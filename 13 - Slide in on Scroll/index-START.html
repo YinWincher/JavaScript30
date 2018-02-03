@@ -115,6 +115,27 @@
     }
 
   </style>
+  <script type="text/javascript">
+    window.addEventListener('scroll',debounce(show));
+    const images = document.querySelectorAll('.slide-in');
+    const docu = document.documentElement;
+    function show(){
+      var height = window.innerHeight;
+      images.forEach(function(ele){
+        var offsetTop = ele.offsetTop;
+        var bottom = ele.height+ele.offsetTop;
+        var testTop = offsetTop < height + docu.scrollTop ;
+        // console.log(bottom);
+        var testBottom = bottom > docu.scrollTop;
+        // console.log(testBottom);
+        if ( testTop && testBottom ) {
+          ele.classList.add('active');
+        }else{
+          ele.classList.remove('active');
+        }
+      });
+    }
 
+  </script>
 </body>
 </html>

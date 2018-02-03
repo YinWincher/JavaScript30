@@ -4,6 +4,24 @@
   <meta charset="UTF-8">
   <title>Key Detection</title>
   <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+  <script type="text/javascript">
+  	const secretKey = 'wesbox';
+  	const arr = [];
+  	window.addEventListener('keyup',function(){
+  		if (arr.length >= secretKey.length) {
+  			arr.shift();
+  			// arr.push(event.key);
+  		}
+  		// else{
+  		arr.push(event.key);
+  		// }
+  		if (arr.join('') == secretKey) {
+  			console.log('haha');
+
+  		}
+  		console.log(arr);
+  	});
+  </script>
 </head>
 <body>
 <script>
